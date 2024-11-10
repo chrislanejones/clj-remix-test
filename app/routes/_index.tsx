@@ -1,62 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-
-export default function TicTacToe() {
-  const [board, setBoard] = useState(Array(9).fill(null))
-  const [xIsNext, setXIsNext] = useState(true)
-
-  const calculateWinner = (squares: (string | null)[]) => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ]
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i]
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a]
-      }
-    }
-    return null
-  }
-
-  const winner = calculateWinner(board)
-  const status = winner
-    ? `Winner: ${winner}`
-    : board.every(Boolean)
-    ? "It's a draw!"
-    : `Next player: ${xIsNext ? 'X' : 'O'}`
-
-  const handleClick = (i: number) => {
-    if (calculateWinner(board) || board[i]) {
-      return
-    }
-    const newBoard = board.slice()
-    newBoard[i] = xIsNext ? 'X' : 'O'
-    setBoard(newBoard)
-    setXIsNext(!xIsNext)
-  }
-
-  const renderSquare = (i: number) => (
-    <Button
-      className="w-20 h-20 text-4xl font-bold bg-gray-700 hover:bg-gray-600 text-yellow-400"
-      onClick={() => handleClick(i)}
-    >
-      {board[i]}
-    </Button>
-  )
-
-  const resetGame = () => {
-    setBoard(Array(9).fill(null))
-    setXIsNext(true)
-  }
+import { Link } from "@remix-run/react";
 
 export const meta: MetaFunction = () => {
   return [
@@ -66,21 +9,74 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Index() {
-    return (
-      <div className="dark min-h-screen flex items-center justify-center bg-gray-900">
-        <Card className="p-6 bg-gray-800 text-white">
-          <h1 className="text-3xl font-bold mb-4 text-center">Tic Tac Toe</h1>
-          <div className="mb-4 text-xl font-semibold text-center">{status}</div>
-          <div className="grid grid-cols-3 gap-2 mb-4">
-            {[...Array(9)].map((_, i) => (
-              <div key={i}>{renderSquare(i)}</div>
-            ))}
+  return (
+    <div>
+      <nav className="bg-gray-800 p-4">
+        <div className="container mx-auto flex justify-between items-center">
+          <div className="text-white font-bold text-xl">Your Logo</div>
+          <div className="space-x-4">
+            <Link
+              to="/"
+              className="text-white hover:text-gray-300 transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              to="/about"
+              className="text-white hover:text-gray-300 transition-colors"
+            >
+              About
+            </Link>
           </div>
-          <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={resetGame}>
-            Restart Game
-          </Button>
-        </Card>
+        </div>
+      </nav>
+      <div className="flex h-screen items-center justify-center">
+        <div className="flex flex-col items-center gap-16">
+          <header className="flex flex-col items-center gap-9">
+            <h1 className="leading text-2xl font-bold text-gray-800 dark:text-gray-100">
+              Welcome to <span className="sr-only">Remix</span>
+            </h1>
+            <div className="h-[144px] w-[434px]">
+              <img
+                src="/logo-light.png"
+                alt="Remix"
+                className="block w-full dark:hidden"
+              />
+              <img
+                src="/logo-dark.png"
+                alt="Remix"
+                className="hidden w-full dark:block"
+              />
+            </div>
+          </header>
+          <nav className="flex flex-col items-center justify-center gap-4 rounded-3xl border border-gray-200 p-6 dark:border-gray-700">
+            <p className="leading-6 text-gray-700 dark:text-gray-200">
+              What&apos;s next?
+            </p>
+            <ul>
+              {resources.map(({ href, text, icon }) => (
+                <li key={href}>
+                  <a
+                    className="group flex items-center gap-3 self-stretch p-3 leading-normal text-blue-700 hover:underline dark:text-blue-500"
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {icon}
+                    {text}
+                  </a>
+                </li>
+              ))}
+              <img
+                src="/images/Rocky-Linux.jpg"
+                alt="Rocky Linux Chris"
+                className="w-full max-w-[300px] h-auto rounded-lg"
+              />
+            </ul>
+          </nav>
+        </div>
       </div>
+    </div>
   );
 }
 
